@@ -16,6 +16,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-add_executable(Gra src/main.cpp)
+add_executable(Gra src/main.cpp
+        src/Menu.cpp
+        src/Menu.h)
 #target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(Gra PRIVATE SFML::Graphics)
