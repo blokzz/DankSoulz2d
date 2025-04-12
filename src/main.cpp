@@ -5,8 +5,7 @@ enum class GameState {
     Menu,
     Playing
 };
-auto main() -> int
-{
+auto main() -> int {
     auto window = sf::RenderWindow(
         sf::VideoMode({800, 600}), "Test",
         sf::Style::Default, sf::State::Windowed,
@@ -20,6 +19,7 @@ auto main() -> int
     } else {
         std::cout << "Czcionka załadowana poprawnie!" << std::endl;
     }
+    GameState state = GameState::Menu;
     Menu menu(font, 800, 600);
     while (window.isOpen())
     {
@@ -29,9 +29,26 @@ auto main() -> int
             {
                 window.close();
             }
+            if (state == GameState::Menu) {
+                if (auto const e = event->getIf<sf::Event::KeyPressed>()) {
+                    if (e->code == sf::Keyboard::Key::Up) {
+                        menu.moveUp();
+                    }
+                    else if (e->code == sf::Keyboard::Key::Down) {
+                        menu.moveDown();
+                    }
+                    else if (e->code == sf::Keyboard::Key::Enter) {
+                        if (menu.getSelectedIndex() == 0) {
+                            state = GameState::Playing;
+                        } else if (menu.getSelectedIndex() == 3) {
+                            window.close();
+                        }
+                    }
+                }
+            }
+            window.clear(sf::Color::Black);
+            menu.draw(window);
+            window.display();
         }
-        window.clear(sf::Color::Black);
-        menu.draw(window);
-        window.display();
     }
 }

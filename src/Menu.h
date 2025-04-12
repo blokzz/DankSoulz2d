@@ -17,7 +17,7 @@ public:
 
 private:
     std::vector<sf::Text> options;
-    std::size_t selectedIndex;
+    std::size_t selectedIndex = 0;
     sf::Texture texture;
     sf::Sprite sprite;
 
