@@ -1,13 +1,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Menu.h"
+#include "Player.h"
 enum class GameState {
     Menu,
     Playing
 };
 auto main() -> int {
     auto window = sf::RenderWindow(
-        sf::VideoMode({800, 600}), "Test",
+        sf::VideoMode({800, 600}), "DankSoulz2d",
         sf::Style::Default, sf::State::Windowed,
         sf::ContextSettings{.antiAliasingLevel = 8}
     );
@@ -21,6 +22,7 @@ auto main() -> int {
     }
     GameState state = GameState::Menu;
     Menu menu(font, 800, 600);
+    Player player;
     while (window.isOpen())
     {
         while (auto const event = window.pollEvent())
@@ -47,7 +49,12 @@ auto main() -> int {
                 }
             }
             window.clear(sf::Color::Black);
-            menu.draw(window);
+            if (state == GameState::Menu) {
+                menu.draw(window);
+            } else if (state == GameState::Playing) {
+                player.handleInput(event);
+                player.draw(window);
+            }
             window.display();
         }
     }
