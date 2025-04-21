@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Menu.h"
 #include "Player.h"
+#include "TileMap.cpp"
 enum class GameState {
     Menu,
     Playing
@@ -12,7 +13,34 @@ auto main() -> int {
         sf::Style::Default, sf::State::Windowed,
         sf::ContextSettings{.antiAliasingLevel = 8}
     );
-
+    constexpr std::array level = {
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 1,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 1,2,2,2,2,2,2,2,2,2,
+        2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 2,2, 2, 2, 1,2,2,2,2,2,2,2,2,2,
+        1, 0, 0, 1, 0,0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0,0,0,0,0,0,0,0,0,0,
+        1, 0, 0, 1, 0,0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0,0,0,0,0,0,0,0,0,0,
+        1, 0, 0, 1, 0,0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0,0,0,0,0,0,0,0,0,0
+    };
+    TileMap map;
+    if (!map.load("tile.png", {32, 32}, level.data(), 25, 19)) {
+        std::cerr << "Nie udało się załadować mapy!\n";
+        return -1;
+    }
+    map.setPosition({0.f, 0.f});
+    map.setScale({1.f, 1.f});
     sf::Font font;
     if (!font.openFromFile("arial.ttf")) {
         std::cerr << "Czcionka NIE załadowana! Sprawdź ścieżkę lub plik!" << std::endl;
@@ -23,14 +51,19 @@ auto main() -> int {
     GameState state = GameState::Menu;
     Menu menu(font, 800, 600);
     Player player;
+    sf::Clock clock;
     while (window.isOpen())
     {
+        float deltaTime = clock.restart().asSeconds();
+
+
         while (auto const event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
+
             if (state == GameState::Menu) {
                 if (auto const e = event->getIf<sf::Event::KeyPressed>()) {
                     if (e->code == sf::Keyboard::Key::Up) {
@@ -48,14 +81,22 @@ auto main() -> int {
                     }
                 }
             }
-            window.clear(sf::Color::Black);
-            if (state == GameState::Menu) {
-                menu.draw(window);
-            } else if (state == GameState::Playing) {
-                player.handleInput(event);
-                player.draw(window);
-            }
-            window.display();
+
+
         }
+
+        if (state == GameState::Playing) {
+            player.update(level.data(), 25, 19, deltaTime);
+        }
+
+        window.clear(sf::Color::Black);
+        if (state == GameState::Menu) {
+            menu.draw(window);
+        } else if (state == GameState::Playing) {
+            window.draw(map);
+            player.draw(window);
+        }
+        window.display();
     }
+
 }

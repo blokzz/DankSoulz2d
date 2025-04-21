@@ -20,6 +20,8 @@ add_executable(Gra src/main.cpp
         src/Menu.cpp
         src/Menu.h
         src/Player.cpp
-        src/Player.h)
+        src/Player.h
+        src/TileMap.cpp
+        src/TileMap.h)
 #target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(Gra PRIVATE SFML::Graphics)
