@@ -10,7 +10,7 @@ public:
         // load the tileset texture
         if (!m_tileset.loadFromFile(tileset))
             return false;
-
+        m_tileset.setSmooth(false);
         // resize the vertex array to fit the level size
         m_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
         m_vertices.resize(width * height * 6);
