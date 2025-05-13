@@ -1,6 +1,6 @@
-//
-// Created by KAMIL on 14.04.2025.
-//
+#ifndef TILEMAP_H
+#define TILEMAP_H
+
 #include <SFML/Graphics.hpp>
 class TileMap : public sf::Drawable, public sf::Transformable
 {
@@ -67,3 +67,4 @@ private:
     sf::VertexArray m_vertices;
     sf::Texture     m_tileset;
 };
+#endif // TILEMAP_H

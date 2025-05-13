@@ -22,6 +22,20 @@ add_executable(Gra src/main.cpp
         src/Player.cpp
         src/Player.h
         src/TileMap.cpp
-        src/TileMap.h)
+        src/TileMap.h
+        src/loadLevelFromFile.h
+        src/Enemy.cpp
+        src/Enemy.h
+        src/sword.cpp
+        src/sword.h
+        src/Chest.cpp
+        src/Chest.h
+        src/Bonefire.cpp
+        src/Bonefire.h
+        src/Game.cpp
+        src/Game.h
+        src/Boss.cpp
+        src/Boss.h
+)
 #target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(Gra PRIVATE SFML::Graphics)
