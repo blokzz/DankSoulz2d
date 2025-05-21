@@ -19,13 +19,10 @@ private:
     sf::Text infoText;
 
     int selectedOption = 0;
-
-
 public:
     Bonefire(const sf::Texture& texture , sf::Vector2f position , Game& game );
-
     void tryInteract(const sf::FloatRect& playerBounds);
-    void updateInput(Player& player , int& score);  // obsługuje klawisze po otwarciu menu
+    void updateInput(Player& player , int& score);
     void draw(sf::RenderWindow& window);
     void drawUpgradeMenu(sf::RenderWindow& window);
     bool getIsModalOpen() const { return isModalOpen; }

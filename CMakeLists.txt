@@ -22,12 +22,11 @@ add_executable(Gra src/main.cpp
         src/Player.cpp
         src/Player.h
         src/TileMap.cpp
-        src/TileMap.h
         src/loadLevelFromFile.h
         src/Enemy.cpp
         src/Enemy.h
-        src/sword.cpp
-        src/sword.h
+        src/Sword.cpp
+        src/Sword.h
         src/Chest.cpp
         src/Chest.h
         src/Bonefire.cpp

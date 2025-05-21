@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "iostream"
-Menu::Menu(const sf::Font& font, float width, float height): texture("logo.png"), sprite(texture) {
+Menu::Menu(const sf::Font& font, float width, float height): texture("../../src/Assets/logo.png"), sprite(texture) {
     std::array<std::string, 4> labels = {"Start", "Wczytaj", "Opcje", "Wyjscie"};
 
     for (std::size_t i = 0; i < labels.size(); ++i) {
@@ -15,7 +15,7 @@ Menu::Menu(const sf::Font& font, float width, float height): texture("logo.png")
         sprite.setTexture(texture);
         sprite.setScale({0.1f, 0.1f});
         sprite.setPosition({170.f, 30.f});
-        std::cout << "Obrazek załadowany! Rozmiar: " << texture.getSize().x << "x" << texture.getSize().y << "\n";
+        std::cout << "udalo sie zaladowac obraz: " << texture.getSize().x << "x" << texture.getSize().y << "\n";
 }
 
 void Menu::draw(sf::RenderWindow& window) {
@@ -23,7 +23,6 @@ void Menu::draw(sf::RenderWindow& window) {
     for (auto& option : options)
         window.draw(option);
 }
-
 
 int Menu::getSelectedIndex() const {
     return selectedIndex;

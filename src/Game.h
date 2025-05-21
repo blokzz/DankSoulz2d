@@ -1,10 +1,10 @@
-#include <iostream>
+#ifndef GAME_H
+#define GAME_H
 #include <SFML/Graphics.hpp>
 #include "Menu.h"
 #include "Player.h"
 #include "TileMap.cpp"
 #include <fstream>
-#include "loadLevelFromFile.h"
 #include "Enemy.h"
 #include "Bonefire.h"
 #include "Chest.h"
@@ -15,9 +15,12 @@ enum class GameState {
     Playing
 };
 
-// Klasa zarządzająca grą
 class Game {
 public:
+    std::vector<std::vector<int>> allChestContents;
+    std::vector<std::vector<int>> allChestStates;
+    bool isAlive = true;
+    std::vector<int> chestStates;
     sf::Texture backgroundTexture;
     sf::RenderWindow& window;
     GameState state;
@@ -38,22 +41,11 @@ public:
     int score=0;
     sf::Clock attackClock;
     float attackCooldown = 0.5f;
-
     int levelCost = 10;
-
     int healthLevel = 1;
-
     int attackLevel = 1;
-
-    int defLevel = 1;
-
-
-    // Tekstury
     sf::Texture bonfireTex;
     sf::Texture chestClosedTex, chestOpenedTex;
-
-
-    // Struktura dla przechowywania danych wrogów na poziomach
     struct EnemyTemplate {
         sf::Vector2f position;
         const sf::Texture* texture;
@@ -64,9 +56,13 @@ public:
 public:
     Game(sf::RenderWindow &window);
 
+    void respawnPlayer();
+
     void UpdatePoints(int newValue);
 
     void setupEnemyTemplates();
+
+    int& getCurrentLevel();
 
     void loadLevel(int level);
 
@@ -86,7 +82,12 @@ public:
 
     void render();
 
+    void saveGame(const std::string& filename);
+
+    void loadGame(const std::string& filename);
+
     GameState getState() const;
 
     void setState(GameState newState);
 };
+#endif

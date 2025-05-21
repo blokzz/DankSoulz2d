@@ -13,34 +13,30 @@ Enemy::Enemy(const sf::Texture& texture, float startX, float startY, float speed
     velocity.x = 50.f;
     setScale({2.f,2.f});
     sf::FloatRect bounds = getLocalBounds();
-    setOrigin({bounds.size.x / 2.f, bounds.size.y}); // środek dołu
+    setOrigin({bounds.size.x / 2.f, bounds.size.y});
 }
 
-
 void Enemy::loadTextures() {
-    if (!smallSlimeTexture.loadFromFile("enemy1.png")) {
+    if (!smallSlimeTexture.loadFromFile("../../src/Assets/enemy1.png")) {
         std::cerr << "Nie udało się załadować enemy1.png\n";
     }
-    if (!bigSlimeTexture.loadFromFile("enemy2.png")) {
+    if (!bigSlimeTexture.loadFromFile("../../src/Assets/enemy2.png")) {
         std::cerr << "Nie udało się załadować enemy2.png\n";
     }
-    if (!fatKnight.loadFromFile("enemy3.png")) {
+    if (!fatKnight.loadFromFile("../../src/Assets/enemy3.png")) {
         std::cerr << "Nie udało się załadować enemy2.png\n";
     }
-    if (!shadow.loadFromFile("enemy4.png")) {
+    if (!shadow.loadFromFile("../../src/Assets/enemy4.png")) {
         std::cerr << "Nie udało się załadować enemy2.png\n";
     }
 }
 void Enemy::drawWithHealthBar(sf::RenderWindow& window) const {
-    // Narysuj wroga (czyli sam sprite)
     window.draw(*this);
 
-    // Pasek zdrowia - tło
     sf::RectangleShape backgroundBar(sf::Vector2f(40.f, 6.f));
     backgroundBar.setFillColor(sf::Color(50, 50, 50));
     backgroundBar.setPosition({getPosition().x - 20.f, getPosition().y - getGlobalBounds().size.y - 10.f});
 
-    // Pasek zdrowia - wypełnienie
     float maxHealth = 250.f;
     float healthPercent = health / maxHealth;
 
@@ -56,20 +52,17 @@ void Enemy::drawWithHealthBar(sf::RenderWindow& window) const {
 }
 
 
-// aktualizacja pozycji wroga
+
 void Enemy::update(float deltaTime, const std::vector<int>& level, int levelWidth, int levelHeight , const sf::Vector2f& playerPosition) {
-    // --- 1. Grawitacja ---
     velocity.y += gravity * deltaTime;
 
-    // --- 2. Sprawdzenie kolizji bocznej ---
     const float probeDistance = 2.f;
     sf::Vector2f pos = getPosition();
     sf::FloatRect bounds = getGlobalBounds();
 
-    // Ustalenie punktu do sprawdzania kolizji po bokach
     float checkX = pos.x + (velocity.x > 0 ? bounds.size.x / 2.f + probeDistance : -bounds.size.x / 2.f - probeDistance);
-    float checkTopY = pos.y - bounds.size.y + 4.f;   // kilka pikseli poniżej górnej krawędzi
-    float checkBottomY = pos.y - 2.f;                // kilka pikseli powyżej dolnej krawędzi
+    float checkTopY = pos.y - bounds.size.y + 4.f;
+    float checkBottomY = pos.y - 2.f;
 
     int tileX = static_cast<int>(checkX / 32);
     int tileYTop = static_cast<int>(checkTopY / 32);
@@ -93,7 +86,7 @@ void Enemy::update(float deltaTime, const std::vector<int>& level, int levelWidt
 
     if (blocked) {
         velocity.x = -velocity.x;
-        setScale({-getScale().x, getScale().y}); // zmiana kierunku
+        setScale({-getScale().x, getScale().y});
     }
     float edgeX = pos.x + (velocity.x > 0 ? bounds.size.x / 2.f + 1.f : -bounds.size.y / 2.f - 1.f);
     float edgeY = pos.y + 1.f;
@@ -115,10 +108,8 @@ void Enemy::update(float deltaTime, const std::vector<int>& level, int levelWidt
         setScale({-getScale().x, getScale().y});
     }
 
-    // --- 3. Przesunięcie ---
     move(velocity * deltaTime);
 
-    // --- 4. Kolizja z podłożem ---
     pos = getPosition();
     float footX = pos.x;
     float footY = pos.y;
@@ -130,22 +121,18 @@ void Enemy::update(float deltaTime, const std::vector<int>& level, int levelWidt
         int belowIndex = tileFootY * levelWidth + tileFootX;
 
         if (level[belowIndex] != 2) {
-            // Stań na ziemi, odejmujemy wysokość sprite'a
             setPosition({pos.x, static_cast<float>(tileFootY * 32)});
             velocity.y = 0.f;
         }
     }
-    // Sprawdź odległość do gracza
     sf::Vector2f enemyPos = getPosition();
     float dx = playerPosition.x - enemyPos.x;
     float dy = playerPosition.y - enemyPos.y;
     float distance = std::sqrt(dx * dx + dy * dy);
 
-    // Jeśli gracz jest w zasięgu, to ścigaj go
     const float chaseRange = 200.f;
     if (distance < chaseRange) {
-        velocity.x = (dx > 0 ? m_speed : -m_speed); // poruszaj się w stronę gracza
-        // Obróć w stronę gracza
+        velocity.x = (dx > 0 ? m_speed : -m_speed);
         if ((dx > 0 && getScale().x < 0) || (dx < 0 && getScale().x > 0)) {
             setScale({ -getScale().x, getScale().y });
         }

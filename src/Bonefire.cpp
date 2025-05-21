@@ -4,17 +4,17 @@
 #include "Game.h"
 Bonefire::Bonefire(const sf::Texture& texture ,  sf::Vector2f position , Game& gameRef)
     : Sprite(texture), game(gameRef), texture(texture), option1(font), option2(font), infoText(font) {
-    setScale({2.f, 2.f}); // dowolna skala
-    if (!font.openFromFile("arial.ttf")) {
+    setScale({2.f, 2.f});
+    if (!font.openFromFile("../../src/Assets/arial.ttf")) {
         std::cerr << "Nie wczytano czcionki!\n";
     }
     setTexture(texture);
     setPosition(position);
-    // Tło modalne
+
     modalBackground.setSize({300, 200});
     modalBackground.setFillColor(sf::Color(0, 0, 0, 200));
     modalBackground.setPosition({250, 200});
-    // Opcje
+
     option1.setFont(font);
     option1.setString("Zapisz gre");
     option1.setCharacterSize(20);
@@ -64,13 +64,12 @@ void Bonefire::updateInput(Player& player , int& score) {
     if (isModalOpen) {
         player.reFillFlask();
     }
-    // Najpierw obsługa podmenu ulepszania
     if (isUpgradeMenuOpen) {
         if (wasKeyPressed(sf::Keyboard::Key::Up)) {
             selectedUpgrade = (selectedUpgrade - 1 + upgradeOptions.size()) % upgradeOptions.size();
         }
         if (wasKeyPressed(sf::Keyboard::Key::Down)) {
-            selectedUpgrade = (selectedUpgrade + 1) % upgradeOptions.size();  // poprawka: teraz idzie w dół
+            selectedUpgrade = (selectedUpgrade + 1) % upgradeOptions.size();
         }
 
         if (wasKeyPressed(sf::Keyboard::Key::Enter)) {
@@ -98,10 +97,9 @@ void Bonefire::updateInput(Player& player , int& score) {
             isModalOpen = true;
         }
 
-        return;  // NIE przechodzimy dalej, jeśli to menu było aktywne
+        return;
     }
 
-    // Jeśli nie otwarte podmenu – sprawdzamy główne menu
     if (!isModalOpen) return;
 
     if (wasKeyPressed(sf::Keyboard::Key::Up)) {
@@ -113,12 +111,12 @@ void Bonefire::updateInput(Player& player , int& score) {
 
     if (wasKeyPressed(sf::Keyboard::Key::Enter)) {
         if (selectedOption == 0) {
-            std::cout << "Zapisz grę (brak implementacji)\n";
+            game.saveGame("../../src/Assets/save.txt");
         } else if (selectedOption == 1) {
 
             isUpgradeMenuOpen = true;
             isModalOpen = false;
-            selectedUpgrade = 0;  // resetuj wybór
+            selectedUpgrade = 0;
         }
     }
 
@@ -131,8 +129,6 @@ void Bonefire::draw(sf::RenderWindow& window) {
     window.draw(*this);
     if (isModalOpen) {
         window.draw(modalBackground);
-
-        // Podświetlanie aktualnie wybranej opcji
         option1.setFillColor(selectedOption == 0 ? sf::Color::Yellow : sf::Color::White);
         option2.setFillColor(selectedOption == 1 ? sf::Color::Yellow : sf::Color::White);
 

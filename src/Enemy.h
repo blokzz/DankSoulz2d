@@ -22,8 +22,8 @@ public:
 
 protected:
     float m_speed;
-    sf::Vector2f velocity; // prędkość (x, y)
-    float gravity = 981.f; // grawitacja (piksele na sekundę kwadrat)
+    sf::Vector2f velocity;
+    float gravity = 981.f;
     float health ;
     float attack;
 };

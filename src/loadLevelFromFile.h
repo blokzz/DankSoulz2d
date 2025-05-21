@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <sstream> // Dodajemy <sstream> do rozdzielania liczb
+#include <sstream>
 
 inline std::vector<int> loadLevelFromFile(const std::string& filename, int& width, int& height) {
     std::ifstream file(filename);
@@ -12,7 +12,6 @@ inline std::vector<int> loadLevelFromFile(const std::string& filename, int& widt
     std::string line;
     width = 0;
     height = 0;
-
     if (!file.is_open()) {
         std::cerr << "Nie można otworzyć pliku poziomu: " << filename << std::endl;
         return {};
@@ -20,20 +19,17 @@ inline std::vector<int> loadLevelFromFile(const std::string& filename, int& widt
 
     while (std::getline(file, line)) {
         if (line.empty()) continue;
-        
-        // Dzielimy linię po spacji i zamieniamy na liczby
-        std::istringstream ss(line); // Strumień do rozdzielenia linii
+
+        std::istringstream ss(line);
         int tile;
         
-        while (ss >> tile) { // Odczytujemy liczby po spacji
-            level.push_back(tile); // Dodajemy liczbę do poziomu
+        while (ss >> tile) {
+            level.push_back(tile);
         }
 
-        if (width == 0) width = level.size(); // Pierwsza linia ustawia szerokość
-        ++height; // Liczymy liczbę wierszy
+        if (width == 0) width = level.size();
+        ++height;
     }
-
-
     return level;
 }
-#endif // LOAD_LEVEL_FROM_FILE_H
+#endif

@@ -2,22 +2,24 @@
 #define PLAYER_H
 #include "Sword.h"
 #include <SFML/Graphics.hpp>
-
+#pragma once
 class Player {
 public:
     Player();
     void update(const int* tileMap, int mapWidth, int mapHeight, float deltaTime);
     void draw(sf::RenderWindow& window);
-    float getPositionX();
-    float getPositionY();
+    float getPositionX() const;
+    float getPositionY() const;
     void setPosition(float x, float y);
-    sf::FloatRect getGlobalBounds();
+    sf::FloatRect getGlobalBounds() const;
     sf::FloatRect getAttackHitbox() const;
     void attack();
-    float getAttack();
+    float getAttack() const;
     void setAttack();
     void setHealth();
     void takeDamage(float damage);
+    int getHealth() const;
+    void upgradeAttack(float power);
     void drawHealthBar(sf::RenderWindow& window) const;
     void drinkFlask();
     void reFillFlask();
@@ -25,13 +27,15 @@ public:
     std::string notificationText;
     sf::Clock notificationClock;
     bool showNotification = false;
+    int getTotalFlasks() const;
+    void setTotalFlasks(int total);
 private:
     sf::Font font;
     int totalFlasks;
     bool flaskUsed = false;
     int flasks ;
-    float damageCooldown = 0.f;          // ile czasu jeszcze nie może dostać obrażeń
-    const float damageCooldownMax = 0.5f; // 0.5 sekundy odporności po otrzymaniu
+    float damageCooldown = 0.f;  
+    const float damageCooldownMax = 0.5f;
     bool isInvincible = false;
     sf::Clock invincibilityClock;
     float invincibilityDuration = 0.8f;
